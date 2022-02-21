@@ -15,45 +15,77 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // reactstrap components
 import {
-  Button,
   Card,
-  CardHeader,
   CardBody,
+  CardHeader,
   CardTitle,
   Table,
-  FormGroup,
-  Form,
-  Input,
   Row,
   Col,
+  Button,
+  Form,
+  FormGroup,
+  Input
 } from "reactstrap";
 
 // core components
 import PanelHeader from "components/PanelHeader/PanelHeader.js";
+import { Link } from 'react-router-dom';
+import { thead, tbody } from "variables/signalements";
 
-import { thead, tbody } from "variables/general";
+function ListeSignalements() {
 
-const myStyle={
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [compteur, setCompteur] = useState(true);
+
+  const myStyle={
     // borderColor="fff",
     borderRadius:20,
     padding:"10px",
     marging:"10pxs"
-};
+  };
+  
+  useEffect(() => {
+    if (compteur){
+    fetch("http://localhost:8090/ato/signalement")
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw response;
+      })
+      .then((data) => {
+        setData(data);
+        console.log(data);
+        setCompteur(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data: ", error);
+        setError(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+    }
+  },[compteur]);
 
-function recheche() {
+  if (loading) return "Loading...";
+  if (error) return "Error!";
   return (
     <>
       <PanelHeader size="sm" />
       <div className="content">
-        <Row>
+      <Row>
           <Col md="12">
             <Card>
               <CardHeader>
-                <h5 className="title">Recheche avancé</h5>
+                <CardTitle tag="h4">Recheche avancé</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form>
@@ -73,11 +105,11 @@ function recheche() {
                     <Col className="pl-1" md="4">
                       <FormGroup>
                         <label >Statut</label>
-                        s<p>
+                        <p>
                         <select style={myStyle}>
                             <option>Nouveau</option>
                             <option>Traitement</option>
-                            <option>Finie</option>
+                            <option>Fini</option>
                         </select>
                         </p>
                       </FormGroup>
@@ -92,22 +124,17 @@ function recheche() {
                         />
                       </FormGroup>
                     </Col>
-                   
                   </Row>
-                  
                 </Form>
               </CardBody>
             </Card>
           </Col>
-          
         </Row>
-
-
         <Row>
           <Col xs={12}>
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Simple Table</CardTitle>
+                <CardTitle tag="h4">liste des signalements</CardTitle>
               </CardHeader>
               <CardBody>
                 <Table responsive>
@@ -125,18 +152,28 @@ function recheche() {
                     </tr>
                   </thead>
                   <tbody>
-                    {tbody.map((prop, key) => {
+                    {data
+                      .filter((prop, nombre) => nombre < 10)
+                      .map((prop, key) => {
+                      const dateDebut = new Date(prop.dateSignalement);
+                      const dateFin = new Date(prop.dateFinSignalement);
                       return (
                         <tr key={key}>
-                          {prop.data.map((prop, key) => {
-                            if (key === thead.length - 1)
-                              return (
-                                <td key={key} className="text-right">
-                                  {prop}
-                                </td>
-                              );
-                            return <td key={key}>{prop}</td>;
-                          })}
+                          <td key='index' className="text-left">
+                            <a href={'maps?id='+prop.id}>#</a>
+                          </td>
+                          <td key='type' className="text-left">
+                            {(prop.type)?prop.type.nom : "..."}
+                          </td>
+                          <td key='etat' className="text-center">
+                            {(prop.etat)?prop.etat.nom : "..."}
+                          </td> 
+                          <td key='dateSignalement' className="text-center">
+                            {(prop.dateSignalement)?dateDebut.getDate()+"-"+(dateDebut.getMonth()+1)+"-"+dateDebut.getFullYear() : "..."}
+                          </td>  
+                          <td key='dateFinSignalement' className="text-center">
+                            {(prop.dateFinSignalement)?dateFin.getDate()+"-"+(dateFin.getMonth()+1)+"-"+dateFin.getFullYear() : "..."}
+                          </td>                          
                         </tr>
                       );
                     })}
@@ -145,12 +182,10 @@ function recheche() {
               </CardBody>
             </Card>
           </Col>
-          
         </Row>
       </div>
-      
     </>
   );
 }
 
-export default recheche ;
+export default ListeSignalements;
