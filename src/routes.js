@@ -9,20 +9,14 @@ import Upgrade from "views/Upgrade.js";
 import UserPage from "views/UserPage.js";
 
 var dashRoutes = [
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: "design_app",
-    component: Dashboard,
-    layout: "/admin",
-  },
-  {
-    path: "/recheche",
-    name: "Recheche",
-    icon: "design_app",
-    component: Recherche,
-    layout: "/admin",
-  },
+  // {
+  //   path: "/dashboard",
+  //   name: "Dashboard",
+  //   icon: "design_app",
+  //   component: Dashboard,
+  //   layout: "/admin",
+  // },
+  
   // {
   //   path: "/icons",
   //   name: "Icons",
@@ -35,6 +29,13 @@ var dashRoutes = [
     name: "Maps",
     icon: "location_map-big",
     component: Maps,
+    layout: "/admin",
+  },
+  {
+    path: "/recheche",
+    name: "Recheche",
+    icon: "ui-1_zoom-bold",
+    component: Recherche,
     layout: "/admin",
   },
   // {
@@ -65,13 +66,6 @@ var dashRoutes = [
   //   component: Typography,
   //   layout: "/admin",
   // },
-  {
-    pro: true,
-    path: "/upgrade",
-    name: "Upgrade to PRO",
-    icon: "objects_spaceship",
-    component: Upgrade,
-    layout: "/admin",
-  },
+  
 ];
 export default dashRoutes;
