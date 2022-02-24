@@ -37,7 +37,7 @@ const MapWrapper = () => {
 
   React.useEffect(() => {
     if (compteur){
-      fetch("http://localhost:8090/ato/signalement")
+      fetch("https://projetcloudrayansedraravo.herokuapp.com/ato/signalement")
         .then((response) => {
           if (response.ok) {
             return response.json();
@@ -201,7 +201,7 @@ const MapWrapper = () => {
       if(signalement.etat.id==2)color="yellow";
       if(signalement.etat.id==3)color="green";
 
-        fetch(`http://localhost:8090/ato/photos/${signalement.id}`)
+        fetch(`https://projetcloudrayansedraravo.herokuapp.com/ato/photos/${signalement.id}`)
         .then((response) => {
           if (response.ok) {
             return response.json();

@@ -36,6 +36,7 @@ import {
 import PanelHeader from "components/PanelHeader/PanelHeader.js";
 import { Link } from 'react-router-dom';
 import { thead, tbody } from "variables/signalements";
+import Select from 'react-select';
 
 function ListeSignalements() {
 
@@ -43,6 +44,17 @@ function ListeSignalements() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [compteur, setCompteur] = useState(true);
+  const [type, setType] = useState({value:null, label:"aucun"});
+  const [etat, setEtat] = useState({value:null, label:"aucun"});
+  const listeType = [];
+  const listeEtat = [];
+  const [dateAvant, setDateAvant] = useState(null);
+  const [dateApres, setDateApres] = useState(null);
+  const [req, setReq] = useState("https://projetcloudrayansedraravo.herokuapp.com/ato/signalement");
+  const and = "&";
+  const begin = "?";
+  const listeArgs = [type.value, etat.value, dateAvant, dateApres];
+  const [misy,setMisy] = useState(false);
 
   const myStyle={
     // borderColor="fff",
@@ -53,16 +65,34 @@ function ListeSignalements() {
   
   useEffect(() => {
     if (compteur){
-    fetch("http://localhost:8090/ato/signalement")
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
+      if(misy){
+        setReq(req+begin);
+        if(type.value)setReq(req+"type="+type.value);
+        if(etat.value){
+          if(type.value)setReq(req+"&");
+          setReq(req+"etat="+etat.value);
         }
-        throw response;
-      })
+        if(dateAvant){
+          if(etat.value||type.value)setReq(req+"&");
+          setReq(req+"avant="+dateAvant);
+        }
+        if(dateApres){
+          if(type.value||etat.value||dateAvant)setReq(req+"&");
+          setReq(req+"apres="+dateApres);
+        }
+      console.log(req);
+      }
+      Promise.all([
+        fetch(req),
+        fetch('https://projetcloudrayansedraravo.herokuapp.com/ato/type'),
+        fetch('https://projetcloudrayansedraravo.herokuapp.com/ato/etat')
+        ]).then(function (responses) {
+          return Promise.all(responses.map(function (response) {
+            return response.json();
+          }));
+        })
       .then((data) => {
         setData(data);
-        console.log(data);
         setCompteur(false);
       })
       .catch((error) => {
@@ -75,8 +105,35 @@ function ListeSignalements() {
     }
   },[compteur]);
 
+  useEffect(() => {
+      setLien();
+      listeArgs.forEach(element => {
+        if(element)setMisy(true);
+      });
+      setCompteur(true);
+    }, [type.value, etat, dateApres, dateAvant]);
+ 
+  function listeObjet(liste,listeRetour){
+    listeRetour.push({value:null, label:"aucun"});
+    liste.forEach(obj => {
+      listeRetour.push({ value:obj.id, label:obj.nom });
+    })
+  }
+
+  function setLien(){
+    listeArgs.splice(0,1,type.value);
+    listeArgs.splice(1,1,etat.value);
+    listeArgs.splice(2,1,dateAvant);
+    listeArgs.splice(3,1,dateApres);
+  }
+
   if (loading) return "Loading...";
   if (error) return "Error!";
+
+  if(data){
+    listeObjet(data[1],listeType);
+    listeObjet(data[2],listeEtat);
+  }
   return (
     <>
       <PanelHeader size="sm" />
@@ -90,36 +147,42 @@ function ListeSignalements() {
               <CardBody>
                 <Form>
                   <Row>
-                    <Col className="pr-1" md="5">
+                    <Col className="pr-1" md="3">
                       <FormGroup>
                         <label>type de signalement</label>
-                        <p>
-                        <select style={myStyle}>
-                            <option>troue</option>
-                            <option>ordure</option>
-                            <option>accident</option>
-                        </select>
-                        </p>
+                        <Select 
+                            style={myStyle}
+                            placeholder="type"
+                            onChange={setType}
+                            options={listeType}/>
                       </FormGroup>
                     </Col>
-                    <Col className="pl-1" md="4">
+                    <Col className="pl-1" md="3">
                       <FormGroup>
                         <label >Statut</label>
-                        <p>
-                        <select style={myStyle}>
-                            <option>Nouveau</option>
-                            <option>Traitement</option>
-                            <option>Fini</option>
-                        </select>
-                        </p>
+                        <Select 
+                            style={myStyle}
+                            placeholder="etat"
+                            onChange={setEtat}
+                            options={listeEtat}/>
                       </FormGroup>
                     </Col>
                     <Col className="px-1" md="3">
                       <FormGroup>
-                        <label>date de signalement</label>
+                        <label>date avant</label>
                         <Input
-                          defaultValue="michael23"
-                          placeholder="dates"
+                          onChange={event => setDateAvant(event.target.value)} 
+                          placeholder="mettez ici la description du signalement"
+                          type="date"
+                        />
+                      </FormGroup>
+                    </Col>
+                    <Col className="px-1" md="3">
+                      <FormGroup>
+                        <label>date apres</label>
+                        <Input
+                          onChange={event => setDateApres(event.target.value)} 
+                          placeholder="mettez ici la description du signalement"
                           type="date"
                         />
                       </FormGroup>
@@ -152,7 +215,7 @@ function ListeSignalements() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data
+                    {data[0]
                       .filter((prop, nombre) => nombre < 10)
                       .map((prop, key) => {
                       const dateDebut = new Date(prop.dateSignalement);
