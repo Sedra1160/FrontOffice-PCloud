@@ -2,21 +2,35 @@ import Dashboard from "views/Dashboard.js";
 import Notifications from "views/Notifications.js";
 import Recherche from "views/Recherche";
 import Icons from "views/Icons.js";
-import Typography from "views/Typography.js";
+import login from "views/login.js";
 import TableList from "views/TableList.js";
 import Maps from "views/Maps.js";
 import Upgrade from "views/Upgrade.js";
 import UserPage from "views/UserPage.js";
 
 var dashRoutes = [
-  // {
-  //   path: "/dashboard",
-  //   name: "Dashboard",
-  //   icon: "design_app",
-  //   component: Dashboard,
-  //   layout: "/admin",
-  // },
   
+  {
+    path: "/login",
+    name: "login",
+    icon: "users_single-02",
+    component: login,
+    layout: "/admin",
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: "design_app",
+    component: Dashboard,
+    layout: "/admin",
+  },
+  {
+    path: "/recheche",
+    name: "Recheche",
+    icon: "design_app",
+    component: Recherche,
+    layout: "/admin",
+  },
   // {
   //   path: "/icons",
   //   name: "Icons",
@@ -59,13 +73,5 @@ var dashRoutes = [
   //   component: TableList,
   //   layout: "/admin",
   // },
-  // {
-  //   path: "/typography",
-  //   name: "Typography",
-  //   icon: "design-2_ruler-pencil",
-  //   component: Typography,
-  //   layout: "/admin",
-  // },
-  
 ];
 export default dashRoutes;
