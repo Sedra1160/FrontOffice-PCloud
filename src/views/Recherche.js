@@ -50,12 +50,15 @@ function ListeSignalements() {
   const listeEtat = [];
   const [dateAvant, setDateAvant] = useState(null);
   const [dateApres, setDateApres] = useState(null);
-  const [req, setReq] = useState("https://projetcloudrayansedraravo.herokuapp.com/ato/signalement");
   const and = "&";
   const begin = "?";
-  const listeArgs = [type.value, etat.value, dateAvant, dateApres];
+  const listeArgs = [
+    {value:type.value, label:"type"}, 
+    {value:etat.value, label:"etat"}, 
+    {value:dateAvant, label:"avant"}, 
+    {value:dateApres, label:"apres"}
+  ];
   const [misy,setMisy] = useState(false);
-
   const myStyle={
     // borderColor="fff",
     borderRadius:20,
@@ -64,23 +67,16 @@ function ListeSignalements() {
   };
   
   useEffect(() => {
+    let req= "https://projetcloudrayansedraravo.herokuapp.com/ato/signalements";
     if (compteur){
       if(misy){
-        setReq(req+begin);
-        if(type.value)setReq(req+"type="+type.value);
-        if(etat.value){
-          if(type.value)setReq(req+"&");
-          setReq(req+"etat="+etat.value);
-        }
-        if(dateAvant){
-          if(etat.value||type.value)setReq(req+"&");
-          setReq(req+"avant="+dateAvant);
-        }
-        if(dateApres){
-          if(type.value||etat.value||dateAvant)setReq(req+"&");
-          setReq(req+"apres="+dateApres);
-        }
-      console.log(req);
+        let condition = "";
+        listeArgs.forEach(zavatra=>{
+          if(zavatra.value){
+            condition+=zavatra.label+"="+zavatra.value+and;
+          }
+        })
+        if(condition!="")req += (begin+condition);
       }
       Promise.all([
         fetch(req),
@@ -92,6 +88,7 @@ function ListeSignalements() {
           }));
         })
       .then((data) => {
+        console.log(req)
         setData(data);
         setCompteur(false);
       })
@@ -105,14 +102,6 @@ function ListeSignalements() {
     }
   },[compteur]);
 
-  useEffect(() => {
-      setLien();
-      listeArgs.forEach(element => {
-        if(element)setMisy(true);
-      });
-      setCompteur(true);
-    }, [type.value, etat, dateApres, dateAvant]);
- 
   function listeObjet(liste,listeRetour){
     listeRetour.push({value:null, label:"aucun"});
     liste.forEach(obj => {
@@ -125,6 +114,8 @@ function ListeSignalements() {
     listeArgs.splice(1,1,etat.value);
     listeArgs.splice(2,1,dateAvant);
     listeArgs.splice(3,1,dateApres);
+    setMisy(true);
+    setCompteur(true);
   }
 
   if (loading) return "Loading...";
@@ -145,8 +136,8 @@ function ListeSignalements() {
                 <CardTitle tag="h4">Recheche avancé</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form>
-                  <Row>
+                <Form >
+                  <Row >
                     <Col className="pr-1" md="3">
                       <FormGroup>
                         <label>type de signalement</label>
@@ -157,7 +148,7 @@ function ListeSignalements() {
                             options={listeType}/>
                       </FormGroup>
                     </Col>
-                    <Col className="pl-1" md="3">
+                    <Col className="pl-1" md="2">
                       <FormGroup>
                         <label >Statut</label>
                         <Select 
@@ -167,7 +158,7 @@ function ListeSignalements() {
                             options={listeEtat}/>
                       </FormGroup>
                     </Col>
-                    <Col className="px-1" md="3">
+                    <Col className="px-1" md="2">
                       <FormGroup>
                         <label>date avant</label>
                         <Input
@@ -177,7 +168,7 @@ function ListeSignalements() {
                         />
                       </FormGroup>
                     </Col>
-                    <Col className="px-1" md="3">
+                    <Col className="px-1" md="2">
                       <FormGroup>
                         <label>date apres</label>
                         <Input
@@ -186,6 +177,11 @@ function ListeSignalements() {
                           type="date"
                         />
                       </FormGroup>
+                    </Col>
+                    <Col className="pt-3" md="3">
+                      <Button onClick={setLien} >
+                        rechercher
+                      </Button> 
                     </Col>
                   </Row>
                 </Form>
