@@ -201,7 +201,7 @@ const MapWrapper = () => {
       if(signalement.etat.id==2)color="yellow";
       if(signalement.etat.id==3)color="green";
 
-        fetch(`https://projetcloudrayansedraravo.herokuapp.com/ato/photos/${signalement.id}`)
+        fetch(`https://projetcloudrayansedraravo.herokuapp.com/ato/photos/${signalement.id}`, {mode:'cors', credentials: 'include'})
         .then((response) => {
           if (response.ok) {
             return response.json();

@@ -71,14 +71,14 @@ function Admin(props) {
               />
             );
           })}
-          <Redirect from="/admin" to="/admin/dashboard" />
+          <Redirect from="/admin" to="/admin/maps" />
         </Switch>
         <Footer fluid />
       </div>
-      <FixedPlugin
+      {/* <FixedPlugin
         bgColor={backgroundColor}
         handleColorClick={handleColorClick}
-      />
+      /> */}
     </div>
   );
 }
