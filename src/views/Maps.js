@@ -15,7 +15,8 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useState, useEffect } from "react";
+import ReactDOM from 'react-dom';
 
 // reactstrap components
 import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
@@ -23,9 +24,33 @@ import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 // core components
 import PanelHeader from "components/PanelHeader/PanelHeader.js";
 
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
+
 const MapWrapper = () => {
+  
+  const [data, setData] = useState(null);
+  const [compteur, setCompteur] = useState(true);
+  const [count, setCount] = useState(true);
   const mapRef = React.useRef(null);
+  // let sary=null;
+
   React.useEffect(() => {
+    if (compteur){
+      fetch("https://projetcloudrayansedraravo.herokuapp.com/ato/signalement")
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw response;
+        })
+        .then((data) => {
+          setData(data);
+          // console.log(data);
+          setCompteur(false);
+        })
+      }
+
     let google = window.google;
     let map = mapRef.current;
     // let lat = "-18.939";
@@ -125,41 +150,74 @@ const MapWrapper = () => {
     // icon: {
     //   url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
     // },
-    function funMarker(location) {
+    function funMarker(location, color, dataSigne, photo) {
+      
+      //affichage photo et fiche signalement
+      let contentString = "";
+      if(photo){
+        contentString+="<Carousel axis='vertical'><div>";
+        photo.map((saryRay, key) =>{
+        contentString +=
+          // "<div key='"+key+"'>"+
+          "<img src='data:image/jpeg;base64, "+saryRay.image.data+"' width='50px'/>";
+        })
+        contentString+="</div> </Carousel>";
+      } else contentString+="<p>tsisy sary</p>";
+
+      contentString+='<div class="info-window-content">' +
+      "<p>Statut:"+dataSigne.etat.nom+"</p>"+
+      "<p>Utilisateur:"+dataSigne.utilisateur.nom+" "+dataSigne.utilisateur.prenom+"</p>"+
+      "<p>Type:"+dataSigne.type.nom+"</p></div>";
+
+      const infowindow = new google.maps.InfoWindow({
+        content: contentString,
+      });
+
       var marker = new google.maps.Marker({
         position: location,
         map: map,
         animation: google.maps.Animation.DROP,
         title: "carte avec liste des signalement",
         icon: {
-          url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+          url: "http://maps.google.com/mapfiles/ms/icons/"+color+"-dot.png"
         },
       });
-      //ecoute de la sourie
-    google.maps.event.addListener(marker, "mouseover", function () {
-      infowindow.open(map, marker);
-    });
-    google.maps.event.addListener(marker, "mouseout", function (){
-      infowindow.close();
-    }); 
+
+      //ecoute de la souris
+      google.maps.event.addListener(marker, "click", function () {
+        if(marker.open){
+          infowindow.close(map, marker);marker.open = false;
+        }
+        infowindow.open(map, marker);
+        marker.open = true;
+      });
+      
     }
-    for(let i=0;i<lat.length;i++){
-      const location=new google.maps.LatLng(lat[i], lng[i]);
-      funMarker(location);
-    }
 
+    if(data)data.forEach(signalement => {
+      const location=new google.maps.LatLng(signalement.latitude, signalement.longitude);
+      let sary=null;  
+      let color = "blue";
+      if(signalement.etat.id==2)color="yellow";
+      if(signalement.etat.id==3)color="green";
 
-    //pop-up 
-    const contentString =
-      '<div class="info-window-content"><h2>Signalement region analamanga </h2>' +
-      "<p>Statut:..........</p><p>photo:........</p></div>";
-
-    const infowindow = new google.maps.InfoWindow({
-      content: contentString,
-    });
-
-    
+        fetch(`https://projetcloudrayansedraravo.herokuapp.com/ato/photos/${signalement.id}`)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw response;
+        })
+        .then((photo) => {
+          sary=photo;
+        })
+        .finally(() => {
+          setCount(false);
+          funMarker(location, color, signalement,sary);
+        });
+    })
   });
+
   return (
     <>
       <div style={{ height: `100%` }} ref={mapRef}></div>
@@ -167,7 +225,7 @@ const MapWrapper = () => {
   );
 };
 
-function FullScreenMap() {
+  function FullScreenMap() {
   return (
     <>
       <PanelHeader size="sm" />
