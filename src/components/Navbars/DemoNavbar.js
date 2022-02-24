@@ -179,7 +179,7 @@ function DemoNavbar(props) {
               </DropdownMenu>
             </Dropdown> */}
             <NavItem>
-              <Link to="#connexion" className="nav-link">
+              <Link to="login" className="nav-link">
                 <i className="now-ui-icons media-2_sound-wave" />
                 <i className="now-ui-icons users_single-02" />
                 <p>
