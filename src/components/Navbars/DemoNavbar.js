@@ -58,6 +58,7 @@ function DemoNavbar(props) {
     var name;
     routes.map((prop, key) => {
       if (prop.collapse) {
+        // console.log(props);
         prop.views.map((prop, key) => {
           if (prop.path === props.location.pathname) {
             name = prop.name;
