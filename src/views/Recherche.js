@@ -17,6 +17,9 @@
 */
 import React from "react";
 
+import Body from "components/Body";
+import Header from "components/Header";
+
 // reactstrap components
 import {
   Button,
@@ -35,6 +38,7 @@ import {
 // core components
 import PanelHeader from "components/PanelHeader/PanelHeader.js";
 
+
 import { thead, tbody } from "variables/general";
 
 const myStyle={
@@ -48,106 +52,10 @@ function recheche() {
   return (
     <>
       <PanelHeader size="sm" />
-      <div className="content">
-        <Row>
-          <Col md="12">
-            <Card>
-              <CardHeader>
-                <h5 className="title">Recheche avancé</h5>
-              </CardHeader>
-              <CardBody>
-                <Form>
-                  <Row>
-                    <Col className="pr-1" md="5">
-                      <FormGroup>
-                        <label>type de signalement</label>
-                        <p>
-                        <select style={myStyle}>
-                            <option>troue</option>
-                            <option>ordure</option>
-                            <option>accident</option>
-                        </select>
-                        </p>
-                      </FormGroup>
-                    </Col>
-                    <Col className="pl-1" md="4">
-                      <FormGroup>
-                        <label >Statut</label>
-                        s<p>
-                        <select style={myStyle}>
-                            <option>Nouveau</option>
-                            <option>Traitement</option>
-                            <option>Finie</option>
-                        </select>
-                        </p>
-                      </FormGroup>
-                    </Col>
-                    <Col className="px-1" md="3">
-                      <FormGroup>
-                        <label>date de signalement</label>
-                        <Input
-                          defaultValue="michael23"
-                          placeholder="dates"
-                          type="date"
-                        />
-                      </FormGroup>
-                    </Col>
-                   
-                  </Row>
-                  
-                </Form>
-              </CardBody>
-            </Card>
-          </Col>
+      <Header/>
+      <Body/>
           
-        </Row>
-
-
-        <Row>
-          <Col xs={12}>
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Simple Table</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <Table responsive>
-                  <thead className="text-primary">
-                    <tr>
-                      {thead.map((prop, key) => {
-                        if (key === thead.length - 1)
-                          return (
-                            <th key={key} className="text-right">
-                              {prop}
-                            </th>
-                          );
-                        return <th key={key}>{prop}</th>;
-                      })}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tbody.map((prop, key) => {
-                      return (
-                        <tr key={key}>
-                          {prop.data.map((prop, key) => {
-                            if (key === thead.length - 1)
-                              return (
-                                <td key={key} className="text-right">
-                                  {prop}
-                                </td>
-                              );
-                            return <td key={key}>{prop}</td>;
-                          })}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </Table>
-              </CardBody>
-            </Card>
-          </Col>
           
-        </Row>
-      </div>
       
     </>
   );
