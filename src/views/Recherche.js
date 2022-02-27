@@ -130,64 +130,55 @@ function ListeSignalements() {
       <PanelHeader size="sm" />
       <div className="content">
       <Row>
-          <Col md="12">
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Recheche avancé</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form >
-                  <Row >
-                    <Col className="pr-1" md="3">
-                      <FormGroup>
+                  <div style={{display:"flex",flexDirection:"row",margin:"auto"}}>
+                      <div style={{width:"200px",margin:"auto"}}>
                         <label>type de signalement</label>
                         <Select 
                             style={myStyle}
                             placeholder="type"
                             onChange={setType}
                             options={listeType}/>
-                      </FormGroup>
-                    </Col>
-                    <Col className="pl-1" md="2">
-                      <FormGroup>
+                      </div>
+                      <div style={{width:"200px",margin:"auto"}}>
                         <label >Statut</label>
                         <Select 
                             style={myStyle}
                             placeholder="etat"
                             onChange={setEtat}
                             options={listeEtat}/>
-                      </FormGroup>
-                    </Col>
-                    <Col className="px-1" md="2">
-                      <FormGroup>
+                      </div>
+                      <div style={{width:"200px",margin:"auto"}}>
+                    
                         <label>date avant</label>
                         <Input
                           onChange={event => setDateAvant(event.target.value)} 
                           placeholder="mettez ici la description du signalement"
                           type="date"
                         />
-                      </FormGroup>
-                    </Col>
-                    <Col className="px-1" md="2">
-                      <FormGroup>
+                      </div>
+                      <div style={{width:"200px",margin:"auto"}}>
                         <label>date apres</label>
                         <Input
                           onChange={event => setDateApres(event.target.value)} 
                           placeholder="mettez ici la description du signalement"
                           type="date"
                         />
-                      </FormGroup>
-                    </Col>
+                      </div>
                     <Col className="pt-3" md="3">
                       <Button onClick={setLien} >
                         rechercher
                       </Button> 
                     </Col>
-                  </Row>
+                    </div>
                 </Form>
               </CardBody>
             </Card>
-          </Col>
         </Row>
         <Row>
           <Col xs={12}>
@@ -219,7 +210,7 @@ function ListeSignalements() {
                       return (
                         <tr key={key}>
                           <td key='index' className="text-left">
-                            <a href={'maps?id='+prop.id}>#</a>
+                            <a href={'maps?lat='+prop.latitude+'&&long='+prop.longitude}>#</a>
                           </td>
                           <td key='type' className="text-left">
                             {(prop.type)?prop.type.nom : "..."}
