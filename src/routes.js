@@ -39,6 +39,13 @@ var dashRoutes = [
     component: Maps,
     layout: "/admin",
   },
+  {
+    path: "/recheche",
+    name: "Recheche",
+    icon: "ui-1_zoom-bold",
+    component: Recherche,
+    layout: "/admin",
+  },
   // {
   //   path: "/notifications",
   //   name: "Notifications",
