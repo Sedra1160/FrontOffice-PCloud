@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, {useState , useEffect} from "react";
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
 
@@ -38,6 +38,10 @@ import {
   FormGroup,
   Input,
   UncontrolledTooltip,
+  Modal,
+  ModalFooter,
+  ModalHeader,
+  ModalBody
 } from "reactstrap";
 
 // core components
@@ -51,8 +55,46 @@ import {
 } from "variables/charts.js";
 
 function Dashboard() {
+  const [modalLogin , setModalLogin]=useState(true);
   return (
     <>
+     <Modal isOpen={modalLogin} style={{
+          display: 'block', width: 700, padding: 30
+      }}>
+        
+        <ModalHeader>Connexion</ModalHeader>
+      
+      <ModalBody>
+           <p> Login</p>
+           <CardBody>
+                                <Row>
+                                    <Col md="12">
+                                        <FormGroup>
+                                            <label>Email</label>
+                                            <Input
+                                                placeholder="email de l' utilisateur"
+                                                type="text"
+                                            />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md="12">
+                                        <FormGroup>
+                                            <label>Mots de passe</label>
+                                            <Input
+                                                placeholder="mots de passe de l' utilisateur"
+                                                type="text"
+                                            />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                        </CardBody>
+           </ModalBody>
+           <ModalFooter>
+                    <Button color="primary" onClick={()=> setModalLogin(false)}>Valider</Button>
+                </ModalFooter>
+      </Modal>
       <PanelHeader
         size="lg"
         content={

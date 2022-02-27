@@ -15,13 +15,9 @@ import AdminLayout from "layouts/Admin.js";
 import { useHistory ,Redirect ,BrowserRouter, Route, Switch} from 'react-router-dom';
   
   function pageLogin(){
-    // const history = useHistory();
+    const history = useHistory();
    const routeChange=()=>{
-       console.log("tay");
-       window.location.replace("/test");
-//         let path = "/admin/dashboard";
-//         let history = useHistory();
-//         history.push(path);
+       
       }
     
       return ( 
