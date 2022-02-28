@@ -10,13 +10,13 @@ import UserPage from "views/UserPage.js";
 
 var dashRoutes = [
   
-  {
-    path: "/login",
-    name: "login",
-    icon: "users_single-02",
-    component: login,
-    layout: "/admin",
-  },
+  //{
+   // path: "/login",
+   // name: "login",
+   // icon: "users_single-02",
+   // component: login,
+    //layout: "/admin",
+  //},
   // {
   //   path: "/dashboard",
   //   name: "Dashboard",

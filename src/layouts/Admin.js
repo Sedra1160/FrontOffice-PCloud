@@ -71,7 +71,7 @@ function Admin(props) {
               />
             );
           })}
-          <Redirect from="/admin" to="/admin/login" />
+          <Redirect from="/admin" to="/admin/maps" />
         </Switch>
         <Footer fluid />
       </div>
